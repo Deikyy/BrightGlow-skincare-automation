@@ -18,19 +18,20 @@ Customer Service Auto-Reply (RAG System)
 - Log all customer queries to Google Sheets for further analysis.
 
 🛠️ Technologies Used
-n8n.io – Automation platform
-OpenAI API – AI Language model
-Pinecone – Vector Database
-Google Sheets – Storage and reporting
-Gmail API – Email automation
-Meta Graph API – Instagram/Facebook DM automation
+- n8n.io – Automation platform
+- OpenAI API – AI Language model
+- Pinecone – Vector Database
+- Google Sheets – Storage and reporting
+- Gmail API – Email automation
+- Meta Graph API – Instagram/Facebook DM automation
 
 🚀 How to Use
-Clone or download this repository.
-Import JSON workflows into your n8n instance.
-Configure your credentials for:
-Google Sheets
-OpenAI API
-Gmail API
-Meta API (optional)
+- Clone or download this repository.
+- Import JSON workflows into your n8n instance.
+- Configure your credentials for:
+- Google Sheets
+- OpenAI API
+- Gmail API
+- Meta API (optional)
+
 Activate workflows and enjoy automation!
