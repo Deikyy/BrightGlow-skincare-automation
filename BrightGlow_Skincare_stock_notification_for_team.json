@@ -1,0 +1,171 @@
+{
+  "name": "BrightGlow Skincare stock notification for team",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        -220
+      ],
+      "id": "411d42ac-0ec7-48c1-9720-ba957d727994",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "623dda5e-2f0f-4e9e-819d-7c9b9c855570",
+              "leftValue": "={{ $json.inventory_quantity }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        -220
+      ],
+      "id": "d787690b-0b4c-44f1-858e-b8ffffc9b560",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "emailType": "text",
+        "message": "=PERINGATAN STOCK MENIPIS: \n\nId : {{ $json.id }};\nProduk : {{ $json.title }};\nStock : {{ $json.inventory_quantity }};\n\n\nSEGERA RESTOCK!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        -360
+      ],
+      "id": "c3329f55-7549-4c96-8f6c-6fa8c036607c",
+      "name": "Gmail",
+      "webhookId": "29771a66-8927-4213-abe6-f37d6acca3af",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vr9T9kndgyqYlxAm",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        -220
+      ],
+      "id": "d0cf001b-0676-4adb-ad3c-9095b19c511d",
+      "name": "Stock"
+    }
+  ],
+  "pinData": {
+    "Stock": [
+      {
+        "json": {
+          "id": 123456789,
+          "title": "BrightGlow Oil Control Serum",
+          "inventory_quantity": 8
+        }
+      },
+      {
+        "json": {
+          "id": 987654321,
+          "title": "BrightGlow Radiance Booster",
+          "inventory_quantity": 25
+        }
+      },
+      {
+        "json": {
+          "id": 456789123,
+          "title": "BrightGlow Gentle Cleanser",
+          "inventory_quantity": 5
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Stock": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2878c962-3a85-43c7-93f2-901f8c3e5363",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a287613f1596da776459594685fbf4e2b4a12124f80ab8c8772f5e37bff103ae"
+  },
+  "id": "jEUHqV4x7qz1xdha",
+  "tags": [
+    {
+      "createdAt": "2025-04-26T16:11:12.416Z",
+      "updatedAt": "2025-04-26T16:11:12.416Z",
+      "id": "3P4VI0my4kAGkwtz",
+      "name": "practice"
+    }
+  ]
+}

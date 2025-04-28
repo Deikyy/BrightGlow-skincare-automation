@@ -1,0 +1,178 @@
+{
+  "name": "Study Case 1: BrightGlow Skincare Weekly sales report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 7,
+              "triggerAtHour": 4
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        -140
+      ],
+      "id": "876ad4f6-5e6e-4ea9-aa6b-e6eb43ffd138",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "emailType": "text",
+        "message": "=Halo pak [CEO]\n\n{{ $json.Summarize }}\nLaporan lengkap : https://docs.google.com/spreadsheets/d/1i-8tNTIyIy8wDxjWd_5Xl2s6BIjfL6IlDsT1DVTVp7Y/edit?gid=45120102#gid=45120102\n\nTerima kasih telah mempercayakan BrightGlow Skincare!\nSalam, Automation Team 🚀\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        840,
+        -140
+      ],
+      "id": "484dfcc7-8257-4d25-955f-9d2a0ea95d1e",
+      "name": "Gmail",
+      "webhookId": "15f36ad6-cfeb-4c50-a3e0-34f8759c7ca4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vr9T9kndgyqYlxAm",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        180,
+        -140
+      ],
+      "id": "6af64f8a-b895-4a14-854d-e07d3747acbd",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Hkh8geVk1KUWOnwL",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet totalOrders = items.length;\nlet totalRevenue = 0;\nlet productCount = {};\n\nfor (const item of items) {\n  totalRevenue += item.json['Total Harga']; // langsung tambah\n  const productName = item.json['Nama Produk'];\n  productCount[productName] = (productCount[productName] || 0) + item.json['Qty'];\n}\n\n// Cari best seller\nlet bestSeller = '';\nlet bestQty = 0;\nfor (const [product, qty] of Object.entries(productCount)) {\n  if (qty > bestQty) {\n    bestSeller = product;\n    bestQty = qty;\n  }\n}\n\n// Output\nreturn [{\n  json: {\n    totalOrders,\n    totalRevenue,\n    bestSeller\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -140
+      ],
+      "id": "89ae655f-67c2-4a11-9d21-536d1f9c6a21",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "df215790-a276-473c-a034-ce6634db111f",
+              "name": "Summarize",
+              "value": "=Berikut laporan penjualan minggu ini:\n\n- Total Orders: {{$json.totalOrders}}\n- Total Revenue: Rp{{$json.totalRevenue}}\n- Best Seller Product: {{$json.bestSeller}}\n\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        620,
+        -140
+      ],
+      "id": "7dda2883-2f51-4653-bf4d-e97cb0ec940d",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "927c063b-cbd2-4287-8633-187824e70f23",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a287613f1596da776459594685fbf4e2b4a12124f80ab8c8772f5e37bff103ae"
+  },
+  "id": "wO3r6HNeTgBv75Ws",
+  "tags": [
+    {
+      "createdAt": "2025-04-26T16:11:12.416Z",
+      "updatedAt": "2025-04-26T16:11:12.416Z",
+      "id": "3P4VI0my4kAGkwtz",
+      "name": "practice"
+    }
+  ]
+}
